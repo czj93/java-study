@@ -49,40 +49,16 @@ public class Server {
 
     public void receive(){
         try {
-            Socket request = serverSocket.accept();
+            Socket client = serverSocket.accept();
             System.out.println("一个链接建立---》");
-            InputStream ins = request.getInputStream();
-            byte[] car = new byte[1024*1024];
-            int len = ins.read(car);
-            String strContent = new String(car, 0, len);
-            System.out.println(strContent);
-//            ins.close();
-            send(request);
+            Request request = new Request(client);
+            Response response = new Response(client);
+            String name = request.getQuery("name");
+            response.print(name + " hello world");
+            response.send(200);
         }catch (IOException e){
             e.printStackTrace();
             System.out.println("客户端连接异常");
-        }
-    }
-
-
-    public void send(Socket request){
-        try {
-            Response response = new Response(request);
-            response.print("<html>");
-            response.print("<head>");
-            response.print("<title>Home</title>");
-            response.print("</head>");
-            response.print("<body>");
-            response.print("<div>");
-            response.print("<h1 style='text-align:center;'>Hello world</h1>");
-            response.print("</div>");
-            response.print("</body>");
-            response.print("<html>");
-
-            response.send(200);
-
-        }catch (IOException e){
-            e.printStackTrace();
         }
     }
 
