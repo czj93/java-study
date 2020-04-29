@@ -40,14 +40,14 @@ public class Server {
     public void start(){
         try {
             serverSocket = new ServerSocket(port);
-            revice();
+            receive();
         }catch (IOException e){
             e.printStackTrace();
             System.out.println("ServerSocket exception");
         }
     }
 
-    public void revice(){
+    public void receive(){
         try {
             Socket request = serverSocket.accept();
             System.out.println("一个链接建立---》");
@@ -67,30 +67,20 @@ public class Server {
 
     public void send(Socket request){
         try {
-            OutputStream out = request.getOutputStream();
-            BufferedWriter write = new BufferedWriter(new OutputStreamWriter(out));
-            StringBuilder res = new StringBuilder();
-            StringBuilder body = new StringBuilder();
-            String blank = " ";
-            String CRLF = "\r\n";
+            Response response = new Response(request);
+            response.print("<html>");
+            response.print("<head>");
+            response.print("<title>Home</title>");
+            response.print("</head>");
+            response.print("<body>");
+            response.print("<div>");
+            response.print("<h1 style='text-align:center;'>Hello world</h1>");
+            response.print("</div>");
+            response.print("</body>");
+            response.print("<html>");
 
-            body.append("<html>");
-            body.append("<head><title>首页</title></head>");
-            body.append("<body><style>h1{text-align: center;}</style> <h1>Hello world</h1> </body>");
+            response.send(200);
 
-            res.append("HTTP/1.1 ").append(blank);
-            res.append(200).append(blank);
-            res.append("OK").append(CRLF);
-            res.append("Content-Type: text/html;").append(CRLF);
-            res.append("Date:").append(new Date()).append(CRLF);
-            res.append("Content-Length:").append(body.length()).append(CRLF);
-            res.append(CRLF);
-
-            res.append(body.toString());
-
-            write.write(res.toString());
-
-            write.flush();
         }catch (IOException e){
             e.printStackTrace();
         }

@@ -1,10 +1,16 @@
 package cn.caozj.server.servlet;
 
+/**
+ * 解析 http 请求
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class Request {
+    static String CRLF = "\r\n";
+    static String blank = " ";
     String text;
     String path;
     String fullPath;
