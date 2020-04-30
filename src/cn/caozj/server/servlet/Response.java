@@ -62,10 +62,14 @@ public class Response {
         header.append(CRLF);
     }
 
-    public void send(int code) throws IOException {
-        createHeader(code);
-        bw.append(header);
-        bw.append(content);
-        bw.flush();
+    public void send(int code) {
+        try {
+            createHeader(code);
+            bw.append(header);
+            bw.append(content);
+            bw.flush();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

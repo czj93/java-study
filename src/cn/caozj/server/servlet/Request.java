@@ -68,7 +68,6 @@ public class Request {
         String[] headers = requestInfo.substring(startIndex, endIndex).split(CRLF);
 
         for (String h:headers){
-            System.out.println(h);
             String[] kv = h.split(":");
             kv = Arrays.copyOf(kv, 2);
             String key = kv[0].toLowerCase();

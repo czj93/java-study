@@ -15,6 +15,8 @@ public class Server {
     private int port = 8888;
     private ServerSocket serverSocket;
     static String webXmlSrc = "cn/caozj/server/servlet/web.xml";
+    private Boolean isRunning = true;
+    static WebContext webContext;
 
 
     public static void main(String[] args) throws Exception {
@@ -24,7 +26,7 @@ public class Server {
         WebHandler webHandler = new WebHandler();
         parser.parse(webXmlIns, webHandler);
 
-        WebContext webContext = new WebContext(webHandler.getEntities(), webHandler.getMappings());
+        webContext = new WebContext(webHandler.getEntities(), webHandler.getMappings());
 
         Server server = new Server();
         server.start();
@@ -49,14 +51,21 @@ public class Server {
 
     public void receive(){
         try {
-            Socket client = serverSocket.accept();
-            System.out.println("一个链接建立---》");
-            Request request = new Request(client);
-            Response response = new Response(client);
-            String name = request.getQuery("name");
-            response.print(name + " hello world");
-            response.send(200);
-        }catch (IOException e){
+            while (isRunning){
+                Socket client = serverSocket.accept();
+                WebServer ws = new WebServer(client, webContext);
+                new Thread(ws).start();
+            }
+
+//            Socket client = serverSocket.accept();
+//            System.out.println("一个链接建立---》");
+//            Request request = new Request(client);
+//            Response response = new Response(client);
+//            String name = request.getQuery("name");
+//            response.print(name + " hello world");
+//            response.send(200);
+        }catch (Exception e){
+            isRunning = false;
             e.printStackTrace();
             System.out.println("客户端连接异常");
         }

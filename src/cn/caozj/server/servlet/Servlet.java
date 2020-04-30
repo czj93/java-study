@@ -1,5 +1,5 @@
 package cn.caozj.server.servlet;
 
 public interface Servlet {
-    void service();
+    void service(Request request, Response response);
 }
