@@ -26,7 +26,7 @@ public class Response {
         bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
     }
 
-    public  Response(OutputStream out){
+    public Response(OutputStream out){
         this();
         bw = new BufferedWriter(new OutputStreamWriter(out));
     }

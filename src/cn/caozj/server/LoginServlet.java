@@ -9,8 +9,6 @@ import java.io.IOException;
 public class LoginServlet implements Servlet {
     @Override
     public void service(Request request, Response response) {
-
         response.print("Hello world");
-        response.send(200);
     }
 }
