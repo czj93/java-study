@@ -1,7 +1,9 @@
 # java-study
-todo: 
-    1. 添加注解功能
 
+    todo: 
+    1. 添加注解功能
+    2. servlet 支持 doGet doPost .....
+    
 
 5/1
     优化代码，添加多线程
