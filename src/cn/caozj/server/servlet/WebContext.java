@@ -30,4 +30,12 @@ public class WebContext {
         String name = mappingMap.get(pattern);
         return entityMap.get(name);
     }
+
+    public void addServlet(String packageName, String url){
+        System.out.println(packageName + ":" + url);
+//        String[] names = packageName.split(".");   // split 分割失败 ？？？
+
+        mappingMap.put(url, packageName);
+        entityMap.put(packageName, packageName);
+    }
 }

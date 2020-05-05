@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Server {
@@ -22,8 +23,12 @@ public class Server {
 
     public void start(){
         try {
-            ArrayList<Class> classes = traversePackageClass();
-            parseWebServletAnnotation(classes);
+            try{
+                List<Class<?>> classes = Utils.getClasses("cn.caozj.server.web");
+                parseWebServletAnnotation(classes);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             serverSocket = new ServerSocket(port);
             isRunning = true;
             receive();
@@ -58,7 +63,7 @@ public class Server {
     }
 
     // 遍历包下的所有 class 文件，解析 WebServlet 注解
-    private ArrayList<Class> traversePackageClass(){
+    private ArrayList<Class> traversePackageClass() throws Exception{
         ArrayList<Class> classes = new ArrayList<>();
         String packageDirPath = packageName.replace(".", "/");
         File packageDir = new File(packageDirPath);
@@ -90,11 +95,17 @@ public class Server {
     }
 
 
-    public void parseWebServletAnnotation(ArrayList<Class> classes){
+    public void parseWebServletAnnotation(List<Class<?>> classes){
         for(Class clz:classes){
+            // Annotation annotation = clz.getAnnotation(clz.class);
             Annotation[] annotations = clz.getAnnotations();
-            for (Annotation annotation: annotations){
-                System.out.println(annotation);
+//            System.out.println(clz);
+            for (Annotation a: annotations){
+                if(a != null && a instanceof WebServlet){
+                    String value = ((WebServlet) a).value();
+                    WebApp.webContext.addServlet(clz.getName(), value);
+                }
+//                Annotation ant = annotation.annotationType();
             }
         }
     }
