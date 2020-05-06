@@ -33,9 +33,10 @@ public class WebContext {
 
     public void addServlet(String packageName, String url){
         System.out.println(packageName + ":" + url);
-//        String[] names = packageName.split(".");   // split 分割失败 ？？？
+        // split .:*| 等字符时需要加\\转义
+        String[] names = packageName.split("\\.");   // split 分割失败 ？？？
 
-        mappingMap.put(url, packageName);
-        entityMap.put(packageName, packageName);
+        mappingMap.put(url, names[names.length-1]);
+        entityMap.put(names[names.length-1], packageName);
     }
 }
