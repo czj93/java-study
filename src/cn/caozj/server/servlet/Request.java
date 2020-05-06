@@ -27,9 +27,9 @@ public class Request {
         headerMap = new HashMap<>();
         parameterMap = new HashMap<>();
 
-        byte[] car = new byte[1024*1024];
+        byte[] car = new byte[1024*1024*10];
         int len = ins.read(car);
-        requestInfo = new String(car, 0, len);
+        requestInfo = new String(car, 0, len);          // ??? error 数组越界 ???
         System.out.println(requestInfo);
 
         parse();
@@ -58,6 +58,9 @@ public class Request {
             if(queryStr.length() > 1){
                 parseQuery(queryStr.substring(1), queryMap);
             }
+        }else{
+            path = fullPath;
+            queryStr = "";
         }
 
         // 解析header
