@@ -1,5 +1,6 @@
 package cn.caozj.learn;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -53,7 +54,20 @@ public class Reflect {
             System.out.println("caozhijian age:" + caozhijan.getAge());
 
 
+            // 获取class注解
+            Annotation[] annotations = clz.getAnnotations();
+            // 获取特定的注解
+            // Webservlet webservlet = (WebServerlt) clz.getAnnotation(WebServlet.class)
+            // webservlet.value()   // 获取注解的 value  值
+
+            // 获取属性的注解
+            //  1. 先获得属
+            //  2. 再从属性上获得注解
+            // ageField.getAnnotation()
+
+
             // 通过反射调用 方法 会比普通的方式慢， 禁止安全检查可以提高性能
+
         }catch (Exception e){
             e.printStackTrace();
         }
