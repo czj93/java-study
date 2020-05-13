@@ -1,6 +1,7 @@
 package cn.caozj.learn;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 /**
@@ -16,14 +17,39 @@ public class FileSystemClassLoader extends ClassLoader {
     public static void main(String[] args) throws Exception{
         // 测试 FileSystemClassLoader
 
-        FileSystemClassLoader fileSystemClassLoader = new FileSystemClassLoader("d:/code/java-learning/lesson-1");
+        // 运行前先创建一个 class 文件
+        // 新建一个 HelloWorld 的 java 文件
 
-        Class<?> c = fileSystemClassLoader.findClass("HelloWorld");
+        // HelloWorld.java
+        // package cn.caozj;
+        //
+        // public class HelloWorld {
+        //    public void sayHello(){
+        //        System.out.println("hello");
+        //    }
+        //  }
 
-        c.getConstructor().newInstance();
+        // 编译 java 代码
+        // javac -d . HelloWorld.java
+        // 控制台没有输出，则表示编译成功
 
+        FileSystemClassLoader fileSystemClassLoader = new FileSystemClassLoader("e:/Code/lib/java");
+
+        // 加载 class
+        Class<?> c = fileSystemClassLoader.findClass("cn.caozj.HelloWorld");
+
+        // 获取构造函数
+        Constructor constructor = c.getDeclaredConstructor();
+
+        // new 一个实例， 不同包下的 class, 必须是 public 修饰， 否者实例的化的时候 会报 IllegalAccessException 异常
+        Object hello = constructor.newInstance();
+
+        // 获取 sayHello 方法
         Method sayHello = c.getDeclaredMethod("sayHello");
-        sayHello.invoke(c);
+//        sayHello.setAccessible(true);   // 禁止安全检查
+
+        // 调用 sayHello 方法
+        sayHello.invoke(hello);
     }
     public FileSystemClassLoader(String root){
         this.root = root;
@@ -44,7 +70,7 @@ public class FileSystemClassLoader extends ClassLoader {
                 try {
                     c = pcl.loadClass(name);
                 }catch (Exception e){
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
 
                 if(c != null){
@@ -54,7 +80,7 @@ public class FileSystemClassLoader extends ClassLoader {
                     byte[] classData = getClassData(name);
 
                     // 定义 class
-                    defineClass(name, classData, 0, classData.length);
+                    c = defineClass(name, classData, 0, classData.length);
                 }
             }
 
@@ -67,7 +93,6 @@ public class FileSystemClassLoader extends ClassLoader {
         InputStream is = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         String classPath = root + "/" + name.replace(".", "/")+".class";
-        System.out.println(classPath);
 
         try {
             is = new FileInputStream(classPath);
