@@ -18,9 +18,21 @@ public class TestMybatis {
 
         SqlSession session = sqlSessionFactory.openSession();
 
+        // 获取所有的 student
         List<Student> listStudent = session.selectList("listStudent");
         for (Student student : listStudent) {
             System.out.println("ID:" + student.getId() + ",NAME:" + student.getName());
         }
+
+        //
+
+        Student student1 = session.selectOne("getStudent", 2);
+
+        System.out.println(student1);
+
+        if(session != null){
+            session.close();
+        }
+
     }
 }
