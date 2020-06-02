@@ -24,11 +24,17 @@ public class TestMybatis {
             System.out.println("ID:" + student.getId() + ",NAME:" + student.getName());
         }
 
-        //
+        // 取得 id = 2 的 student
+        Student student2 = session.selectOne("getStudent", 2);
+        System.out.println(student2);
 
-        Student student1 = session.selectOne("getStudent", 2);
+        // 修改 student2
+        student2.setName("caozhijian1");
 
-        System.out.println(student1);
+        session.update("updateStudent", student2);
+
+        // 事务提交
+        session.commit();
 
         if(session != null){
             session.close();
