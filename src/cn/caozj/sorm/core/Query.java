@@ -13,11 +13,11 @@ public interface Query {
      * @param params    参数
      * @return  执行sql后影响的记录数
      */
-    public int executeDML(String sql, Object params);
+    public int executeDML(String sql, Object[] params);
 
     public void insert(Object obj);
 
-    public int delete(Class clz, int id);
+    public int delete(Class clz, Object id);
 
     public void delete(Object obj);
 

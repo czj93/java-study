@@ -4,6 +4,8 @@ import cn.caozj.sorm.bean.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /**
@@ -40,6 +42,28 @@ public class DBManager {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static Configuration getConf() {
+        return conf;
+    }
+
+    public static void close(Connection conn, PreparedStatement ps){
+        if(conn != null){
+            try {
+                conn.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+
+        if(ps != null){
+            try {
+                ps.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -2,6 +2,9 @@ package cn.caozj.sorm.core;
 
 import cn.caozj.sorm.bean.ColumnInfo;
 import cn.caozj.sorm.bean.TableInfo;
+import cn.caozj.sorm.po.Student;
+import cn.caozj.sorm.utils.JavaFileUtils;
+import cn.caozj.sorm.utils.StringUtils;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -68,6 +71,10 @@ public class TableContext {
         }catch (Exception e){
             e.printStackTrace();
         }
+        // 更新表结构
+        updateTableJavaFile();
+
+        loadPoTables();
     }
 
 
@@ -75,8 +82,38 @@ public class TableContext {
         return tables;
     }
 
+    public static void updateTableJavaFile(){
+        TypeConvertor convertor = new MysqlTypeConvertor();
+        for(TableInfo table: tables.values()){
+            if(!table.getTname().equals("sys_config")){
+                JavaFileUtils.createJavaBeanFile(table, convertor);
+            }
+        }
+    }
+
+    public static void loadPoTables(){
+        for (TableInfo table : tables.values()){
+            // 跳过 sys_config 这张表
+            if(!table.getTname().equals("sys_config")){
+                String cname = DBManager.getConf().getPoPackage() + "." + StringUtils.firstChar2UpperCase(table.getTname());
+                try {
+                    Class c = Class.forName(cname);
+                    poClassTableMap.put(c, table);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public static void main(String[] args){
         Map<String, TableInfo> tables = getTableInfos();
         System.out.println(tables);
+
+        MysqlQuery query = new MysqlQuery();
+        Student st1 = new Student();
+        st1.setId(2);
+        query.delete(st1);
+
     }
 }
