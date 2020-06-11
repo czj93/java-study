@@ -63,7 +63,7 @@ public class TableContext {
                 }
 
                 if(ti.getPriKeys().size() > 0){
-                    ti.setOnlyPriKey(ti.getColums().get(0));
+                    ti.setOnlyPriKey(ti.getPriKeys().get(0));
                 }
 
             }
