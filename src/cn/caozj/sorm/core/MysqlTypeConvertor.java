@@ -19,6 +19,8 @@ public class MysqlTypeConvertor implements TypeConvertor {
             return "Double";
         }else if("time".equalsIgnoreCase(columnType)){
             return "java.sql.Time";
+        }else if("date".equalsIgnoreCase(columnType)){
+            return "java.sql.Date";
         }
         return null;
     }

@@ -111,9 +111,25 @@ public class TableContext {
         System.out.println(tables);
 
         MysqlQuery query = new MysqlQuery();
-        Student st1 = new Student();
-        st1.setId(2);
-        query.delete(st1);
+        // 测试删除
+//        Student st1 = new Student();
+//        st1.setId(2);
+//        query.delete(st1);
+
+        //测试插入
+
+//        Student st2 = new Student();
+//        st2.setStudentID(2);
+//        st2.setName("caozhijian");
+//        query.insert(st2);
+
+        // 测试 update
+        Student st3 = new Student();
+        st3.setId(4);
+        st3.setName("caozhijian3");
+        st3.setStudentID(662301);
+
+        query.update(st3, new String[]{"name", "studentID"});
 
     }
 }

@@ -6,9 +6,12 @@ import cn.caozj.sorm.utils.JDBCUtils;
 import cn.caozj.sorm.utils.ReflectUtils;
 import cn.caozj.sorm.utils.StringUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MysqlQuery implements Query {
@@ -38,7 +41,41 @@ public class MysqlQuery implements Query {
 
     @Override
     public void insert(Object obj) {
+        Class clz = obj.getClass();
+        TableInfo tableInfo = TableContext.poClassTableMap.get(clz);
+        ColumnInfo onlyPriKey = tableInfo.getOnlyPriKey();
 
+        // sql insert 格式 insert into 表名(studentID,name) values (?,?);
+        StringBuilder sql = new StringBuilder();
+        List<Object> sqlValues = new ArrayList<>();
+
+        Field[] fields = clz.getDeclaredFields();
+        int countNotNullFiled = 0;
+
+        sql.append("insert into " + tableInfo.getTname());
+        sql.append("(" );
+
+        for(Field field : fields){
+            String fieldName = field.getName();
+            Object filedValue = ReflectUtils.invokeGet(clz, obj, fieldName);
+            // 排除空值 和 主键
+            if(filedValue != null && !fieldName.equals(onlyPriKey.getName())){
+                sqlValues.add(filedValue);
+                sql.append( fieldName + ",");
+                countNotNullFiled++;
+            }
+        }
+
+        sql.setCharAt(sql.length()-1, ')');
+        sql.append(" values (" );
+
+        for (int i = 0 ;  i < countNotNullFiled; i++){
+            sql.append("?,");
+        }
+
+        sql.setCharAt(sql.length()-1, ')');
+
+        executeDML(sql.toString(), sqlValues.toArray());
     }
 
     @Override
@@ -64,9 +101,26 @@ public class MysqlQuery implements Query {
 
     @Override
     public int update(Object obj, String[] fieldNames) {
-        return 0;
-    }
+        // obj => update 表名 set name=?,studentID=? where id=?;
 
+        Class clz = obj.getClass();
+        List<Object> params = new ArrayList<>();
+        TableInfo tableInfo = TableContext.poClassTableMap.get(clz);
+        ColumnInfo onlyPriKey = tableInfo.getOnlyPriKey();
+
+        StringBuilder sql = new StringBuilder("update " + tableInfo.getTname() + " set ");
+        for(String filed : fieldNames){
+
+            sql.append(filed + "=?,");
+            params.add(ReflectUtils.invokeGet(clz, obj, filed));
+        }
+        sql.setCharAt(sql.length()-1,  ' ');
+        sql.append("where id=?" );
+        params.add(ReflectUtils.invokeGet(clz, obj, onlyPriKey.getName()));
+
+        return executeDML(sql.toString(), params.toArray());
+    }
+    
     @Override
     public List queryRows(String sql, Class clz, Object[] params) {
         return null;
