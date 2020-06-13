@@ -8,8 +8,11 @@ import cn.caozj.sorm.utils.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.rmi.server.ExportException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -120,10 +123,37 @@ public class MysqlQuery implements Query {
 
         return executeDML(sql.toString(), params.toArray());
     }
-    
+
     @Override
     public List queryRows(String sql, Class clz, Object[] params) {
-        return null;
+        Connection conn = DBManager.getConn();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Object> list = null;
+        try {
+            ps = conn.prepareStatement(sql);
+            JDBCUtils.handleParams(ps, params);
+            rs = ps.executeQuery();                     // 执行查询条件
+            ResultSetMetaData metaData = rs.getMetaData();
+
+            while (rs.next()){
+                if(list == null){
+                    list = new ArrayList<>();
+                }
+                Object rowObj = clz.newInstance();
+                for (int i = 0; i < metaData.getColumnCount(); i++){
+                    String columnName = metaData.getColumnLabel(i+1);
+                    Object columnValue = rs.getObject(i+1);
+                    ReflectUtils.invokeSet(rowObj, columnName, columnValue);
+                }
+                list.add(rowObj);
+            }
+            return list;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -131,5 +132,8 @@ public class TableContext {
 
         query.update(st3, new String[]{"name", "studentID"});
 
+        // 测试查询
+        List<Object> list = query.queryRows("select * from student where id=?", Student.class,  new Object[]{3});
+        System.out.println(list);
     }
 }

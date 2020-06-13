@@ -15,4 +15,17 @@ public class ReflectUtils {
         return null;
     }
 
+
+    public  static void invokeSet( Object obj, String fieldName, Object value){
+        Class clz = obj.getClass();
+        String methodName = "set" + StringUtils.firstChar2UpperCase(fieldName);
+        try {
+            Method setMethod = clz.getDeclaredMethod(methodName, value.getClass());
+            if(value != null){
+                setMethod.invoke(obj, value);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
