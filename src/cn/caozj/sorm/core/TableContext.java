@@ -107,9 +107,16 @@ public class TableContext {
         }
     }
 
+    public static void testQueryTime(MysqlQuery query){
+        List<Student> list = query.queryRows("select * from student", Student.class,  new Object[]{});
+
+        for (Student st: list){
+            System.out.println("name:" + st.getName() + "--id:" + st.getStudentID());
+        }
+    }
+
     public static void main(String[] args){
         Map<String, TableInfo> tables = getTableInfos();
-        System.out.println(tables);
 
         MysqlQuery query = new MysqlQuery();
         // 测试删除
@@ -133,7 +140,19 @@ public class TableContext {
         query.update(st3, new String[]{"name", "studentID"});
 
         // 测试查询
-        List<Object> list = query.queryRows("select * from student where id=?", Student.class,  new Object[]{3});
-        System.out.println(list);
+        List<Student> list = query.queryRows("select * from student where id>?", Student.class,  new Object[]{2});
+
+        for (Student st: list){
+            System.out.println("name:" + st.getName() + "--id:" + st.getStudentID());
+        }
+
+        long start = System.currentTimeMillis();
+
+        for (int i = 0; i < 1001; i++){
+            testQueryTime(query);
+        }
+
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 }

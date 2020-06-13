@@ -148,9 +148,14 @@ public class MysqlQuery implements Query {
                 }
                 list.add(rowObj);
             }
+
+
+
             return list;
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            DBManager.close(conn, ps);
         }
 
         return list;

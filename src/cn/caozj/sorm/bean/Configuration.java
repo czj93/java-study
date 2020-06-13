@@ -30,6 +30,10 @@ public class Configuration {
 
     private String poPackage;
 
+    private int maxPoolConnSize;
+
+    private int minPoolConnSize;
+
     public String getDriver() {
         return driver;
     }
@@ -84,5 +88,21 @@ public class Configuration {
 
     public void setPoPackage(String poPackage) {
         this.poPackage = poPackage;
+    }
+
+    public int getMaxPoolConnSize() {
+        return maxPoolConnSize;
+    }
+
+    public void setMaxPoolConnSize(int maxPoolConnSize) {
+        this.maxPoolConnSize = maxPoolConnSize;
+    }
+
+    public int getMinPoolConnSize() {
+        return minPoolConnSize;
+    }
+
+    public void setMinPoolConnSize(int minPoolConnSize) {
+        this.minPoolConnSize = minPoolConnSize;
     }
 }

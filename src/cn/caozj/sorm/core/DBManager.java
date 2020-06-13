@@ -1,6 +1,7 @@
 package cn.caozj.sorm.core;
 
 import cn.caozj.sorm.bean.Configuration;
+import cn.caozj.sorm.pool.DBConnPool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +15,7 @@ import java.util.Properties;
 public class DBManager {
 
     private static Configuration conf;
+    private static DBConnPool pool;
     static {
         Properties pros = new Properties();
         try {
@@ -31,14 +33,26 @@ public class DBManager {
         conf.setUrl(pros.getProperty("url"));
         conf.setUser(pros.getProperty("user"));
         conf.setUsingDB(pros.getProperty("usingDB"));
-
+//        conf.setMinPoolConnSize(Integer.getInteger(pros.getProperty("minPoolConnSize")));
+//        conf.setMaxPoolConnSize(Integer.getInteger(pros.getProperty("maxPoolConnSize")));
+        pool = new DBConnPool();
     }
 
-
-    public static Connection getConn(){
+    public static Connection createConn(){
         try{
             Class.forName(conf.getDriver());
             return DriverManager.getConnection(conf.getUrl(), conf.getUser(), conf.getPwd());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Connection getConn(){
+        try{
+            return pool.getConnection();
+//            Class.forName(conf.getDriver());
+//            return DriverManager.getConnection(conf.getUrl(), conf.getUser(), conf.getPwd());
         }catch (Exception e){
             e.printStackTrace();
             return null;
@@ -50,13 +64,15 @@ public class DBManager {
     }
 
     public static void close(Connection conn, PreparedStatement ps){
-        if(conn != null){
-            try {
-                conn.close();
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-        }
+
+        pool.closeConnection(conn);
+//        if(conn != null){
+//            try {
+//                conn.close();
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//            }
+//        }
 
         if(ps != null){
             try {
