@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="personczj" class="cn.caozj.spring.bean.Person">
+        <property name="lastName" value="czj"></property>
+        <property name="age" value="18"></property>
+        <property name="gender" value="男"></property>
+        <property name="email" value="1205234934@qq.com"></property>
+    </bean>
+</beans>

@@ -1,7 +1,7 @@
 package cn.caozj.sorm.utils;
 
 import java.lang.reflect.Method;
-
+@SuppressWarnings("all")
 public class ReflectUtils {
 
     public static Object invokeGet(Class clz, Object obj, String fieldName){
