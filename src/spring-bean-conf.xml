@@ -8,4 +8,11 @@
         <property name="gender" value="男"></property>
         <property name="email" value="1205234934@qq.com"></property>
     </bean>
+
+    <bean id="person2" class="cn.caozj.spring.bean.Person">
+        <constructor-arg name="lastName" value="czj2"></constructor-arg>
+        <constructor-arg name="age" value="18"></constructor-arg>
+        <constructor-arg name="gender" value="男"></constructor-arg>
+        <constructor-arg name="email" value="1205234934@qq.com"></constructor-arg>
+    </bean>
 </beans>

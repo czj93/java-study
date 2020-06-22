@@ -6,6 +6,15 @@ public class Person {
     private String gender;
     private String email;
 
+    public Person(){}
+
+    public Person(String lastName, Integer age, String gender, String email) {
+        this.lastName = lastName;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+    }
+
     public String getLastName() {
         return lastName;
     }

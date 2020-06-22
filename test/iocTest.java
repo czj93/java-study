@@ -14,5 +14,8 @@ public class iocTest {
 
         Person czj = (Person)ioc.getBean("personczj");
         System.out.println(czj.toString());
+
+        Person czj2 = (Person) ioc.getBean("person2");
+        System.out.println(czj2);
     }
 }
