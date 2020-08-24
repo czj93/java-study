@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath:db.properties" />
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
+        <property name="driverClass" value="${jdbc.driverClass}" />
+    </bean>
+
     <bean id="personczj" class="cn.caozj.spring.bean.Person">
         <property name="lastName" value="czj"></property>
         <property name="age" value="18"></property>
@@ -15,4 +26,6 @@
         <constructor-arg name="gender" value="男"></constructor-arg>
         <constructor-arg name="email" value="1205234934@qq.com"></constructor-arg>
     </bean>
+
+    <context:component-scan base-package="cn.caozj"></context:component-scan>
 </beans>

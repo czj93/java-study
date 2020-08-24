@@ -1,3 +1,4 @@
+import cn.caozj.spring.bean.Car;
 import cn.caozj.spring.bean.Person;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -17,5 +18,9 @@ public class iocTest {
 
         Person czj2 = (Person) ioc.getBean("person2");
         System.out.println(czj2);
+
+        // 测试自动装配
+        Car car = czj.getCar();
+        car.start();
     }
 }
